@@ -4,7 +4,7 @@
 
 __global__ void saxpy(size_t total_elements, long a, float *x, float *y)
 {
-    long idx = blockIdx.x * blockDim.x + threadIdx.x;
+    auto idx = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (idx < total_elements)
     {
@@ -25,7 +25,7 @@ void run_saxpy(size_t threads_per_block, size_t total_elements, long a, float *x
 
     CUDA_CHECK(cudaMemcpy(y_dev, y, total_elements, ::cudaMemcpyHostToDevice));
 
-    size_t num_blocks = (total_elements + threads_per_block - 1) / threads_per_block;
+    auto num_blocks = (total_elements + threads_per_block - 1) / threads_per_block;
 
     saxpy<<<num_blocks, threads_per_block>>>(total_elements, a, x_dev, y_dev);
     CUDA_CHECK_LAUNCH();

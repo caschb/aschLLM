@@ -12,8 +12,8 @@ auto main(int argc, char **argv) -> int
     auto total_elements = atol(argv[2]);
     auto a = atol(argv[3]);
 
-    float *x = new float[total_elements];
-    float *y = new float[total_elements];
+    auto *x = new float[total_elements];
+    auto *y = new float[total_elements];
 
     for (auto i = 0l; i < total_elements; ++i)
     {
