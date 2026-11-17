@@ -1,7 +1,11 @@
 #include <cuda_runtime.h>
 #include <iostream>
+#include <span>
+#include <vector>
+
 #include "aschllm/core/error_handling.h"
 #include "aschllm/core/stream.h"
+#include "aschllm/core/device_buffer.h"
 
 __global__ void saxpy(size_t total_elements, long a, float *x, float *y)
 {
@@ -15,27 +19,18 @@ __global__ void saxpy(size_t total_elements, long a, float *x, float *y)
 
 void run_saxpy(size_t threads_per_block, size_t total_elements, long a, float *x, float *y)
 {
-    float *x_dev;
-    float *y_dev;
+
+    AschLLM::DeviceBuffer<float> x_dev(total_elements);
+    AschLLM::DeviceBuffer<float> y_dev(total_elements);
 
     AschLLM::Stream stream;
-
-    CUDA_CHECK(cudaMalloc(&x_dev, total_elements * sizeof(float)));
-
-    CUDA_CHECK(cudaMalloc(&y_dev, total_elements * sizeof(float)));
-
-    CUDA_CHECK(cudaMemcpy(x_dev, x, total_elements * sizeof(float), ::cudaMemcpyHostToDevice));
-
-    CUDA_CHECK(cudaMemcpy(y_dev, y, total_elements * sizeof(float), ::cudaMemcpyHostToDevice));
+    x_dev.copy_host_to_dev(std::span<float>{x, total_elements});
+    y_dev.copy_host_to_dev(std::span<float>{y, total_elements});
 
     auto num_blocks = (total_elements + threads_per_block - 1) / threads_per_block;
 
-    saxpy<<<num_blocks, threads_per_block, 0, stream.get_cuda_stream()>>>(total_elements, a, x_dev, y_dev);
+    saxpy<<<num_blocks, threads_per_block, 0, stream.get_cuda_stream()>>>(total_elements, a, x_dev.get_buffer(), y_dev.get_buffer());
     CUDA_CHECK_LAUNCH();
 
-    CUDA_CHECK(cudaMemcpy(y, y_dev, total_elements, ::cudaMemcpyDeviceToHost));
-
-    CUDA_CHECK(cudaFree(x_dev));
-
-    CUDA_CHECK(cudaFree(y_dev));
+    y_dev.copy_dev_to_host(std::span<float>{y, total_elements});
 }
