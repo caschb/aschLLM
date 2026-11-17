@@ -1,5 +1,4 @@
-#ifndef ERROR_HANDLING_H
-#define ERROR_HANDLING_H
+#pragma once
 #include <cuda_runtime.h>
 #include <cstdlib>
 
@@ -42,5 +41,3 @@ namespace AschLLM
 
     void cuda_fail(cudaError_t error, const char *expr, const char *file, int line);
 }
-
-#endif

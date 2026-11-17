@@ -1,5 +1,4 @@
-#ifndef STREAM_H
-#define STREAM_H
+#pragma once
 #include <cuda_runtime.h>
 #include <utility>
 
@@ -27,5 +26,3 @@ namespace AschLLM
         ~Stream();
     };
 }
-
-#endif
