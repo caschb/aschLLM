@@ -1,14 +1,27 @@
-#include <cuda_runtime.h>
-
 #ifndef ERROR_HANDLING_H
 #define ERROR_HANDLING_H
+#include <cuda_runtime.h>
+#include <cstdlib>
 
 #define CUDA_CHECK(expr)                                       \
     do                                                         \
     {                                                          \
         cudaError_t e_ = (expr);                               \
         if (e_ != cudaSuccess)                                 \
+        {                                                      \
             AschLLM::cuda_fail(e_, #expr, __FILE__, __LINE__); \
+            std::abort();                                      \
+        }                                                      \
+    } while (0)
+
+#define CUDA_CHECK_NOTHROW(expr)                               \
+    do                                                         \
+    {                                                          \
+        cudaError_t e_ = (expr);                               \
+        if (e_ != cudaSuccess)                                 \
+        {                                                      \
+            AschLLM::cuda_fail(e_, #expr, __FILE__, __LINE__); \
+        }                                                      \
     } while (0)
 
 #define CUDA_CHECK_LAUNCH()                       \
