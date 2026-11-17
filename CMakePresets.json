@@ -14,12 +14,27 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"RelWithDebInfo"
             }
+        },
+        {
+            "name": "Debug",
+            "displayName": "Debug configuration",
+            "description": "Debug config using Ninja",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/Debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug",
+                "ASCHLLM_SYNC_AFTER_LAUNCH":"ON"
+            }
         }
     ],
     "buildPresets": [
         {
             "name": "Development",
             "configurePreset": "Development"
+        },
+            {
+            "name": "Debug",
+            "configurePreset": "Debug"
         }
     ],
 
@@ -34,6 +49,19 @@
                 {
                     "type": "build",
                     "name": "Development"
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Debug"
+                },
+                {
+                    "type": "build",
+                    "name": "Debug"
                 }
             ]
         }

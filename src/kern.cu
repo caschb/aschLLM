@@ -1,5 +1,6 @@
 #include <cuda_runtime.h>
 #include <iostream>
+#include "aschllm/core/error_handling.h"
 
 __global__ void saxpy(size_t total_elements, long a, float *x, float *y)
 {
@@ -16,38 +17,22 @@ void run_saxpy(size_t threads_per_block, size_t total_elements, long a, float *x
     float *x_dev;
     float *y_dev;
 
-    cudaMalloc(&x_dev, total_elements * sizeof(float));
-    auto err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK(cudaMalloc(&x_dev, total_elements * sizeof(float)));
 
-    cudaMalloc(&y_dev, total_elements * sizeof(float));
+    CUDA_CHECK(cudaMalloc(&y_dev, total_elements * sizeof(float)));
 
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK(cudaMemcpy(x_dev, x, total_elements, ::cudaMemcpyHostToDevice));
 
-    cudaMemcpy(x_dev, x, total_elements, ::cudaMemcpyHostToDevice);
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
-
-    cudaMemcpy(y_dev, y, total_elements, ::cudaMemcpyHostToDevice);
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK(cudaMemcpy(y_dev, y, total_elements, ::cudaMemcpyHostToDevice));
 
     size_t num_blocks = (total_elements + threads_per_block - 1) / threads_per_block;
 
     saxpy<<<num_blocks, threads_per_block>>>(total_elements, a, x_dev, y_dev);
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK_LAUNCH();
 
-    cudaMemcpy(y, y_dev, total_elements, ::cudaMemcpyDeviceToHost);
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK(cudaMemcpy(y, y_dev, total_elements, ::cudaMemcpyDeviceToHost));
 
-    cudaFree(x_dev);
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK(cudaFree(x_dev));
 
-    cudaFree(y_dev);
-    err = cudaGetLastError();
-    std::cout << cudaGetErrorName(err) << '\t' << cudaGetErrorString(err) << '\n';
+    CUDA_CHECK(cudaFree(y_dev));
 }
