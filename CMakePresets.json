@@ -1,0 +1,41 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 4,
+        "minor": 0
+    },
+    "configurePresets": [
+        {
+            "name": "Development",
+            "displayName": "Development configuration",
+            "description": "Development config using Ninja",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/Development",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"RelWithDebInfo"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Development",
+            "configurePreset": "Development"
+        }
+    ],
+
+    "workflowPresets": [
+        {
+            "name": "Development",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Development"
+                },
+                {
+                    "type": "build",
+                    "name": "Development"
+                }
+            ]
+        }
+    ]
+}
