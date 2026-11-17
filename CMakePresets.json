@@ -10,17 +10,25 @@
             "displayName": "Development configuration",
             "description": "Development config using Ninja",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/Development",
+            "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"RelWithDebInfo"
+            }
+        },
+        {
+            "name": "Release",
+            "displayName": "Release config",
+            "description": "Release config using Ninja",
+            "inherits": "Development",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
             }
         },
         {
             "name": "Debug",
             "displayName": "Debug configuration",
             "description": "Debug config using Ninja",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/Debug",
+            "inherits": "Development",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug",
                 "ASCHLLM_SYNC_AFTER_LAUNCH":"ON"
@@ -32,7 +40,11 @@
             "name": "Development",
             "configurePreset": "Development"
         },
-            {
+        {
+            "name": "Release",
+            "configurePreset": "Release"
+        },
+        {
             "name": "Debug",
             "configurePreset": "Debug"
         }
@@ -49,6 +61,19 @@
                 {
                     "type": "build",
                     "name": "Development"
+                }
+            ]
+        },
+        {
+            "name": "Release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Release"
+                },
+                {
+                    "type": "build",
+                    "name": "Release"
                 }
             ]
         },
