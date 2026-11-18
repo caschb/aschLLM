@@ -1,4 +1,5 @@
 #include "aschllm/kern.h"
+#include "aschllm/core/device_info.h"
 #include <iostream>
 
 auto main(int argc, char **argv) -> int
@@ -14,6 +15,10 @@ auto main(int argc, char **argv) -> int
 
     auto *x = new float[total_elements];
     auto *y = new float[total_elements];
+
+    AschLLM::DeviceInfo dev{0};
+
+    std::cout << "GPU#" << 0 << ": " << dev.getDeviceName() << '\t' << dev.getL2CacheSize() << " bytes\n";
 
     for (auto i = 0l; i < total_elements; ++i)
     {

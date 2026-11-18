@@ -1,7 +1,7 @@
 find_package(CUDAToolkit)
 
 add_library(aschLLM_lib STATIC
-    kern.cu core/error_handling.cpp core/stream.cpp)
+    kern.cu core/error_handling.cpp core/stream.cpp core/device_info.cpp)
 
 option(ASCHLLM_SYNC_AFTER_LAUNCH "Sync after every kernel launch" OFF)
 
