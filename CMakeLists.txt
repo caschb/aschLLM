@@ -24,3 +24,16 @@ target_compile_options(aschLLM_flags INTERFACE
 target_include_directories(aschLLM_flags INTERFACE include)
 
 add_subdirectory(src)
+
+include(CTest)
+if(BUILD_TESTING AND PROJECT_IS_TOP_LEVEL)
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/releases/download/v1.18.0/googletest-1.18.0.tar.gz
+    FIND_PACKAGE_ARGS NAMES GTest
+)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+add_subdirectory(tests)
+endif()

@@ -12,7 +12,8 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE":"RelWithDebInfo"
+                "CMAKE_BUILD_TYPE":"RelWithDebInfo",
+                "BUILD_TESTING": false
             }
         },
         {
@@ -21,7 +22,8 @@
             "description": "Release config using Ninja",
             "inherits": "Development",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE":"Release"
+                "CMAKE_BUILD_TYPE":"Release",
+                "BUILD_TESTING": false
             }
         },
         {
@@ -31,7 +33,8 @@
             "inherits": "Development",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug",
-                "ASCHLLM_SYNC_AFTER_LAUNCH":"ON"
+                "ASCHLLM_SYNC_AFTER_LAUNCH":"ON",
+                "BUILD_TESTING": true
             }
         }
     ],
@@ -49,7 +52,17 @@
             "configurePreset": "Debug"
         }
     ],
-
+    "testPresets": [
+        {
+            "name": "Debug",
+            "configurePreset": "Debug",
+            "inheritConfigureEnvironment": true,
+            "output": {
+                "verbosity": "verbose",
+                "outputOnFailure": true
+            }
+        }
+    ],
     "workflowPresets": [
         {
             "name": "Development",
@@ -86,6 +99,10 @@
                 },
                 {
                     "type": "build",
+                    "name": "Debug"
+                },
+                {
+                    "type": "test",
                     "name": "Debug"
                 }
             ]

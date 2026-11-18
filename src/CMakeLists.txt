@@ -5,7 +5,7 @@ add_library(aschLLM_lib STATIC
 
 option(ASCHLLM_SYNC_AFTER_LAUNCH "Sync after every kernel launch" OFF)
 
-target_compile_definitions(aschLLM_lib PRIVATE
+target_compile_definitions(aschLLM_lib PUBLIC
     $<$<BOOL:${ASCHLLM_SYNC_AFTER_LAUNCH}>:ASCHLLM_SYNC_AFTER_LAUNCH>)
 
 add_executable(aschLLM main.cpp)
