@@ -22,12 +22,17 @@ target_compile_options(aschLLM_flags INTERFACE
     $<$<COMPILE_LANGUAGE:CXX>:-Wall;-Wextra;-Wshadow>)
 
 target_include_directories(aschLLM_flags INTERFACE include)
-
+include(FetchContent)
+FetchContent_Declare(
+    spdlog
+    URL https://github.com/gabime/spdlog/archive/refs/tags/v1.17.0.tar.gz
+    FIND_PACKAGE_ARGS NAMES spdlog 
+)
+FetchContent_MakeAvailable(spdlog)
 add_subdirectory(src)
 
-include(CTest)
 if(BUILD_TESTING AND PROJECT_IS_TOP_LEVEL)
-include(FetchContent)
+include(CTest)
 FetchContent_Declare(
     googletest
     URL https://github.com/google/googletest/releases/download/v1.18.0/googletest-1.18.0.tar.gz
@@ -35,5 +40,8 @@ FetchContent_Declare(
 )
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+
+
+
 add_subdirectory(tests)
 endif()

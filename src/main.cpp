@@ -1,40 +1,40 @@
 #include "aschllm/kern.h"
 #include "aschllm/core/device_info.h"
 #include <iostream>
+#include <algorithm>
+#include <vector>
+#include "spdlog/spdlog.h"
 
 auto main(int argc, char **argv) -> int
 {
-    if (argc != 4)
+    if (argc != 3)
     {
-        std::cerr << "Usage: " << argv[0] << " <threads_per_block> <total_elements> <a>\n";
+        spdlog::error("Usage {} <threads_per_block> <total_elements>", argv[0]);
         exit(EXIT_FAILURE);
     }
     auto threads_per_block = atol(argv[1]);
     auto total_elements = atol(argv[2]);
-    auto a = atol(argv[3]);
 
-    auto *x = new float[total_elements];
-    auto *y = new float[total_elements];
+    std::vector<float> x(total_elements);
+    std::vector<float> y(total_elements, 0.);
 
     AschLLM::DeviceInfo dev{0};
 
-    std::cout << "GPU#" << 0 << ": " << dev.getDeviceName() << '\t' << dev.getL2CacheSize() << " bytes\n";
+    spdlog::info("GPU#0 {}", dev.getDeviceName());
+    spdlog::info("GPU#0 Clock Rate {} kHz", dev.getClockRate());
+    spdlog::info("GPU#0 L2 Cache Size {} B", dev.getL2CacheSize());
+    spdlog::info("GPU#0 Max Shared Memory Per Block {}", dev.getMaxSharedMemoryPerBlock());
+    spdlog::info("GPU#0 Memory Bus Width {}", dev.getMemoryBusWidth());
+    spdlog::info("GPU#0 Memory Clock Rate {}", dev.getMemoryClockRate());
+    spdlog::info("GPU#0 Shared Multiprocessor Count {}", dev.getSharedMultiprocessorCount());
+    spdlog::debug("Running with: threads_per_block={}, total_elements={}", threads_per_block, total_elements);
 
     for (auto i = 0l; i < total_elements; ++i)
     {
-        x[i] = 10. * i;
-        y[i] = 20. * i;
+        x[i] = 10. * (i + 1);
     }
-    std::cout << argv[0] << ' ' << threads_per_block << ' ' << total_elements << ' ' << a << '\n';
-    std::cout << "x=" << x[1] << '\t' << "y=" << y[1] << '\n';
-    std::cout << x[1] * a + y[1] << '\n';
 
-    run_saxpy(threads_per_block, total_elements, a, x, y);
-
-    std::cout << y[1] << '\n';
-
-    delete[] x;
-    delete[] y;
+    run_copy_kernel_basic(threads_per_block, x, y);
 
     return EXIT_SUCCESS;
 }
