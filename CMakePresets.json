@@ -36,6 +36,14 @@
                 "ASCHLLM_SYNC_AFTER_LAUNCH":"ON",
                 "BUILD_TESTING": true
             }
+        },
+        {
+            "name": "Sanitize",
+            "displayName": "Debug + compute-sanitizer",
+            "inherits": "Debug",
+            "cacheVariables": {
+                "CMAKE_TEST_LAUNCHER": "compute-sanitizer;--tool=memcheck;--leak-check=full;--error-exitcode=1;--require-cuda-init=no"
+            }
         }
     ],
     "buildPresets": [
@@ -50,6 +58,10 @@
         {
             "name": "Debug",
             "configurePreset": "Debug"
+        },
+        {
+            "name": "Sanitize",
+            "configurePreset": "Sanitize"
         }
     ],
     "testPresets": [
@@ -61,6 +73,11 @@
                 "verbosity": "verbose",
                 "outputOnFailure": true
             }
+        },
+        {
+            "name": "Sanitize",
+            "inherits": "Debug",
+            "configurePreset": "Sanitize"
         }
     ],
     "workflowPresets": [
