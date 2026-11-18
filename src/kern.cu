@@ -3,9 +3,11 @@
 #include <span>
 #include <vector>
 #include <algorithm>
+#include "spdlog/spdlog.h"
 
 #include "aschllm/core/error_handling.h"
 #include "aschllm/core/stream.h"
+#include "aschllm/core/event.h"
 #include "aschllm/core/device_buffer.h"
 #include "aschllm/kern.h"
 
@@ -55,13 +57,26 @@ void run_copy_kernel_basic(size_t threads_per_block, std::vector<float> &x, std:
 
     auto num_blocks = (x.size() + threads_per_block - 1) / threads_per_block;
     AschLLM::Stream stream;
+
+    AschLLM::Event start;
+    AschLLM::Event end;
+
+    cudaEventRecord(start.get_cuda_event(), stream.get_cuda_stream());
     copy_kernel_basic<<<num_blocks, threads_per_block, 0, stream.get_cuda_stream()>>>(x_dev.get_length(), x_dev.get_buffer(), y_dev.get_buffer());
+    cudaEventRecord(end.get_cuda_event(), stream.get_cuda_stream());
+
+    stream.synchronize();
+
+    float elapsedTime;
+    cudaEventElapsedTime(&elapsedTime, start.get_cuda_event(), end.get_cuda_event());
+
+    spdlog::info("Kernel execution time: {} ms", elapsedTime);
 
     y_dev.copy_dev_to_host(y);
 
     auto msm = std::mismatch(x.begin(), x.end(), y.begin());
     if (msm.first != x.end())
     {
-        std::cout << "Mismatch! x: " << *msm.first << ", y: " << *msm.second << '\n';
+        spdlog::error("Mismatch! x: {}, y: {}", *msm.first, *msm.second);
     }
 }

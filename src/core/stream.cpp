@@ -15,6 +15,11 @@ namespace AschLLM
         return this->stream;
     }
 
+    void Stream::synchronize()
+    {
+        cudaStreamSynchronize(this->stream);
+    }
+
     Stream::~Stream()
     {
         if (this->stream)

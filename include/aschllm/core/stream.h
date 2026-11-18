@@ -23,6 +23,7 @@ namespace AschLLM
         }
 
         cudaStream_t get_cuda_stream() const;
+        void synchronize();
         ~Stream();
     };
 }
