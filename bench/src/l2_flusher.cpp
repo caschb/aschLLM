@@ -7,6 +7,6 @@ namespace AschLLMBench
 {
     void L2Flusher::flush_stream(const AschLLM::Stream &stream)
     {
-        CUDA_CHECK(cudaMemsetAsync(l2buffer.get_buffer(), 10, l2buffer.get_size(), stream.get_cuda_stream()));
+        l2buffer.memset_async(10, stream);
     }
 } // namespace AschLLMBench

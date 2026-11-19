@@ -57,6 +57,11 @@ namespace AschLLM
             return length * sizeof(T);
         }
 
+        void memset_async(int value, const Stream &stream)
+        {
+            CUDA_CHECK(cudaMemsetAsync(buffer_dev, value, get_size(), stream.get_cuda_stream()));
+        }
+
         void copy_host_to_dev_async(const PinnedHostBuffer<T> &buffer_host, const Stream &stream) const
         {
             SIZE_CHECK(get_length(), buffer_host.get_length());
