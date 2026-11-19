@@ -31,6 +31,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 add_subdirectory(src)
 
+add_subdirectory(bench)
+
 if(BUILD_TESTING AND PROJECT_IS_TOP_LEVEL)
 include(CTest)
 FetchContent_Declare(
@@ -40,8 +42,6 @@ FetchContent_Declare(
 )
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-
-
 
 add_subdirectory(tests)
 endif()

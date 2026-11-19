@@ -2,6 +2,7 @@
 #include "aschllm/core/error_handling.h"
 #include <cuda_runtime.h>
 #include <iostream>
+#include <cstddef>
 
 namespace AschLLM
 {
@@ -17,9 +18,9 @@ namespace AschLLM
     {
         return this->device_id;
     }
-    int DeviceInfo::getL2CacheSize() const
+    std::size_t DeviceInfo::getL2CacheSize() const
     {
-        return this->properties.l2CacheSize;
+        return (size_t)this->properties.l2CacheSize;
     }
     int DeviceInfo::getMemoryBusWidth() const
     {

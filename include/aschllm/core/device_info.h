@@ -1,6 +1,7 @@
 #pragma once
 #include <cuda_runtime.h>
 #include <string_view>
+#include <cstddef>
 
 namespace AschLLM
 {
@@ -17,7 +18,7 @@ namespace AschLLM
         DeviceInfo(int device_id);
 
         int getDeviceId() const;
-        int getL2CacheSize() const;
+        std::size_t getL2CacheSize() const;
         int getMemoryBusWidth() const;
         int getSharedMultiprocessorCount() const;
         int getClockRate() const;
