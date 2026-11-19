@@ -18,14 +18,15 @@ namespace AschLLMBench
                        { return t.get_duration(); });
         std::sort(durations.begin(), durations.end());
 
-        stats.count = durations.size();
+        auto count = durations.size();
+        stats.count = count;
         stats.maximum = durations.back();
         stats.minimum = durations.front();
-        stats.mean = std::reduce(durations.begin(), durations.end()) / durations.size();
-        stats.median = durations.size() % 2 ? durations[durations.size() / 2] : 0.5f * (durations[durations.size() / 2 - 1] + durations[durations.size() / 2]);
+        stats.mean = std::reduce(durations.begin(), durations.end()) / count;
+        stats.median = count % 2 ? durations[count / 2] : 0.5f * (durations[count / 2 - 1] + durations[count / 2]);
         float sv = std::transform_reduce(durations.begin(), durations.end(), 0.f, std::plus(), [m = stats.mean](float d)
                                          { return (d - m) * (d - m); });
-        stats.stddev = durations.size() > 1 ? std::sqrt(sv / (durations.size() - 1)) : 0.f;
+        stats.stddev = count > 1 ? std::sqrt(sv / (count - 1)) : 0.f;
         stats.coeffient_of_variation = stats.stddev / stats.mean;
         return stats;
     }
