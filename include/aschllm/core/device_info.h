@@ -23,6 +23,7 @@ namespace AschLLM
         int getClockRate() const;
         int getMemoryClockRate() const;
         int getMaxSharedMemoryPerBlock() const;
+        int getAsyncEngineCount() const;
         std::string_view getDeviceName() const;
     };
 }

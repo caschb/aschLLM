@@ -27,6 +27,7 @@ auto main(int argc, char **argv) -> int
     spdlog::info("GPU#0 Memory Bus Width {}", dev.getMemoryBusWidth());
     spdlog::info("GPU#0 Memory Clock Rate {}", dev.getMemoryClockRate());
     spdlog::info("GPU#0 Shared Multiprocessor Count {}", dev.getSharedMultiprocessorCount());
+    spdlog::info("GPU#0 Async Engine Count {}", dev.getAsyncEngineCount());
     spdlog::debug("Running with: threads_per_block={}, total_elements={}", threads_per_block, total_elements);
 
     for (auto i = 0l; i < total_elements; ++i)

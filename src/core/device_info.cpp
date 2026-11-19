@@ -41,6 +41,10 @@ namespace AschLLM
     {
         return this->max_shared_memory_per_block;
     }
+    int DeviceInfo::getAsyncEngineCount() const
+    {
+        return this->properties.asyncEngineCount;
+    }
     std::string_view DeviceInfo::getDeviceName() const
     {
         auto name = this->properties.name;
