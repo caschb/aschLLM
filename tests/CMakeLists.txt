@@ -4,6 +4,7 @@ target_link_libraries(
   PRIVATE
   aschLLM_lib
   GTest::gtest_main
+  GTest::gmock
 )
 include(GoogleTest)
 gtest_discover_tests(core_test)

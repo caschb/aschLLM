@@ -3,6 +3,8 @@
 #include <utility>
 #include <span>
 #include "aschllm/core/error_handling.h"
+#include "aschllm/core/pinned_host_buffer.h"
+#include "aschllm/core/stream.h"
 
 namespace AschLLM
 {
@@ -53,6 +55,18 @@ namespace AschLLM
         size_t get_size() const
         {
             return length * sizeof(T);
+        }
+
+        void copy_host_to_dev_async(const PinnedHostBuffer<T> &buffer_host, const Stream &stream) const
+        {
+            SIZE_CHECK(get_length(), buffer_host.get_length());
+            CUDA_CHECK(cudaMemcpyAsync(buffer_dev, buffer_host.as_span().data(), get_size(), ::cudaMemcpyHostToDevice, stream.get_cuda_stream()));
+        }
+
+        void copy_dev_to_host_async(PinnedHostBuffer<T> &buffer_host, const Stream &stream)
+        {
+            SIZE_CHECK(get_length(), buffer_host.get_length());
+            CUDA_CHECK(cudaMemcpyAsync(buffer_host.as_span().data(), buffer_dev, get_size(), ::cudaMemcpyDeviceToHost, stream.get_cuda_stream()));
         }
 
         void copy_host_to_dev(std::span<const T> buffer_host)

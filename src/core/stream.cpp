@@ -17,7 +17,7 @@ namespace AschLLM
 
     void Stream::synchronize()
     {
-        cudaStreamSynchronize(this->stream);
+        CUDA_CHECK(cudaStreamSynchronize(this->stream));
     }
 
     Stream::~Stream()

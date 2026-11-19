@@ -10,6 +10,7 @@
 #include "aschllm/core/event.h"
 #include "aschllm/core/device_buffer.h"
 #include "aschllm/kern.h"
+#include "aschllm/core/pinned_host_buffer.h"
 
 __global__ void saxpy(size_t total_elements, long a, float *x, float *y)
 {
