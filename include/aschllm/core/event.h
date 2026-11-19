@@ -12,6 +12,8 @@ namespace AschLLM
     public:
         Event();
 
+        Event(unsigned int flags);
+
         Event(const Event &) = delete;
         Event &operator=(const Event &) = delete;
 

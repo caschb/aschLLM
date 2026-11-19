@@ -10,6 +10,11 @@ namespace AschLLM
         CUDA_CHECK(cudaEventCreate(&this->event));
     }
 
+    Event::Event(unsigned int flags) // TODO: work with an enum instead
+    {
+        CUDA_CHECK(cudaEventCreateWithFlags(&this->event, flags));
+    }
+
     cudaEvent_t Event::get_cuda_event() const
     {
         return this->event;
